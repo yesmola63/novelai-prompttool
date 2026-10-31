@@ -1,0 +1,234 @@
+/* ===== 表单模态框（添加/编辑） ===== */
+.form-modal .modal-box {
+    max-width: 600px;
+    padding-top: 60px;
+}
+.form-modal .modal-body {
+    flex-direction: column;
+    padding: 20px 28px 30px;
+    overflow-y: auto;
+    max-height: 100%;
+}
+.form-modal .form-group {
+    margin-bottom: 16px;
+}
+.form-modal .form-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: #2c5a7a;
+    margin-bottom: 4px;
+}
+.form-modal .form-group input,
+.form-modal .form-group textarea,
+.form-modal .form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d0e2ed;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #f8fbfd;
+    transition: border-color 0.2s;
+}
+.form-modal .form-group input:focus,
+.form-modal .form-group textarea:focus,
+.form-modal .form-group select:focus {
+    outline: none;
+    border-color: #4a90d9;
+    background: #fff;
+}
+.form-modal .form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+.form-modal .form-group select {
+    appearance: auto;
+    cursor: pointer;
+}
+
+/* ===== 图片列表（添加/编辑） ===== */
+.image-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+    max-height: 180px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+.image-list .image-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f0f4f8;
+    padding: 4px 10px 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #2c5a7a;
+    word-break: break-all;
+    flex-shrink: 0;
+}
+.image-list .image-item .del-img-btn {
+    background: none;
+    border: none;
+    color: #b33;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 0 4px;
+    transition: color 0.2s;
+}
+.image-list .image-item .del-img-btn:hover {
+    color: #d94a4a;
+}
+.image-add-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+}
+.image-add-row input {
+    flex: 1;
+    padding: 6px 12px;
+    border: 1px solid #d0e2ed;
+    border-radius: 20px;
+    font-size: 13px;
+}
+.image-add-row button {
+    background: #4a90d9;
+    color: #fff;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+.image-add-row button:hover {
+    background: #3a7abf;
+}
+
+/* ===== 封面图片选择按钮（美化原生文件选择） ===== */
+.image-add-row .file-pick-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: linear-gradient(135deg, rgba(74, 144, 217, 0.14), rgba(42, 157, 143, 0.10));
+    border: 1px dashed rgba(74, 144, 217, 0.45);
+    color: #2c5a7a;
+    padding: 9px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(74, 144, 217, 0.06);
+}
+.image-add-row .file-pick-btn:hover {
+    background: linear-gradient(135deg, #4a90d9, #2a9d8f);
+    color: #fff;
+    border-style: solid;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.28);
+    transform: translateY(-1px);
+}
+.image-add-row input.file-input-hidden {
+    display: none;
+}
+
+/* ===== 表单底部操作 ===== */
+.form-modal .form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+.form-modal .form-actions button {
+    padding: 8px 28px;
+    border: none;
+    border-radius: 40px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.form-modal .form-actions .btn-submit {
+    background: #4a90d9;
+    color: #fff;
+}
+.form-modal .form-actions .btn-submit:hover {
+    background: #3a7abf;
+}
+.form-modal .form-actions .btn-cancel {
+    background: #e0e8ef;
+    color: #2c5a7a;
+}
+.form-modal .form-actions .btn-cancel:hover {
+    background: #d0dce6;
+}
+.form-modal .form-actions .btn-upload {
+    background: #f0f4f8;
+    color: #2c5a7a;
+    border: 1px dashed #4a90d9;
+    padding: 8px 18px;
+}
+.form-modal .form-actions .btn-upload:hover {
+    background: #e0ecf5;
+}
+.form-modal .file-input-hidden {
+    display: none;
+}
+
+/* ===== 分组输入：匹配面板（与分类下拉面板同风格）+ 新建分组提示 ===== */
+/* 让输入框所在的分组成为定位参照，面板浮在下方 */
+.form-modal .form-group {
+    position: relative;
+}
+.group-suggest {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 60;
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid rgba(74, 144, 217, 0.18);
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(26, 58, 80, 0.16);
+    animation: fadeSlideIn 0.18s ease;
+}
+.group-option {
+    padding: 9px 12px;
+    border-radius: 9px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #2c5a7a;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background 0.15s, color 0.15s;
+}
+.group-option:hover,
+.group-option:active {
+    background: rgba(74, 144, 217, 0.10);
+    color: #1a3a50;
+}
+.group-hint {
+    display: none;
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #c0392b;
+}
+
+.group-hint.ok {
+    color: #2a9d8f;
+}

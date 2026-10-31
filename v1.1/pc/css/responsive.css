@@ -1,0 +1,214 @@
+/* ===== 响应式 ===== */
+
+/* 手机：缩小卡片（一行显示 4~5 个）、竖图压缩空间 */
+@media (max-width: 640px) {
+    .modal-box {
+        padding-top: 72px;
+        max-height: 95vh;
+        border-radius: 20px;
+    }
+    .modal-back-btn {
+        top: 12px;
+        left: 14px;
+        padding: 6px 14px 6px 10px;
+        font-size: 13px;
+    }
+    .modal-body {
+        flex-direction: column;
+    }
+    .modal-image-area {
+        flex: 0 0 38%;
+        min-height: 160px;
+        max-height: 42vh;
+        padding: 10px 12px 6px;
+    }
+    .modal-image-area .img-wrapper {
+        min-height: 0;
+        height: 100%;
+        overflow: hidden;
+    }
+    .modal-image-area .img-wrapper img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain !important;
+        width: auto !important;
+        height: auto !important;
+    }
+    .modal-info-area {
+        padding: 12px 12px 14px;
+        max-height: 52vh;
+        flex: 1;
+        overflow-y: auto;
+    }
+    .modal-image-area .img-nav button {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+    }
+    .modal-image-area .img-wrapper .download-btn {
+        bottom: 6px;
+        right: 6px;
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    .modal-image-area .img-wrapper .download-btn svg {
+        width: 13px;
+        height: 13px;
+    }
+
+    /* 卡片网格：一行 4~5 个 */
+    .card-grid {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 8px;
+    }
+    .prompt-card {
+        border-radius: 10px;
+    }
+    .prompt-card .card-label {
+        font-size: 10px;
+        padding: 2px 8px;
+    }
+    .prompt-card .card-role-tag {
+        font-size: 9px;
+        padding: 2px 6px;
+        top: 6px;
+        left: 6px;
+    }
+    .prompt-card .card-overlay {
+        height: 32%;
+        padding: 0 6px 8px;
+    }
+    .prompt-card .card-detail-btn {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+
+    /* 工具栏按钮缩小 */
+    .prompt-toolbar {
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    .prompt-toolbar .tool-btn {
+        padding: 5px 12px;
+        font-size: 12px;
+    }
+
+    /* 头部缩小 */
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 12px;
+        gap: 6px;
+    }
+    .prompt-container {
+        padding: 12px 10px 16px;
+    }
+
+    /* 分类导航缩小 */
+    .category-nav {
+        gap: 6px;
+        margin-bottom: 12px;
+        padding: 3px 0;
+    }
+    .category-tag {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+    .nav-arrow {
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+    }
+
+    /* 分组标题缩小 */
+    .group-title {
+        font-size: 15px;
+        padding: 4px 3px 8px 4px;
+        margin-bottom: 10px;
+    }
+
+    /* 表单弹窗缩小 */
+    .form-modal .modal-box {
+        padding-top: 56px;
+    }
+    .form-modal .modal-body {
+        padding: 14px 14px 18px;
+    }
+    .form-modal .form-group {
+        margin-bottom: 10px;
+    }
+    .form-modal .form-group input,
+    .form-modal .form-group select,
+    .form-modal .form-group textarea {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+    .form-modal .form-actions {
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: stretch;
+    }
+    .form-modal .form-actions button {
+        flex: 1;
+        min-width: 70px;
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+    .form-modal .tool-btn {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+    .image-list {
+        max-height: 100px;
+    }
+    .image-add-row {
+        flex-wrap: wrap;
+    }
+    .image-add-row input {
+        min-width: 100px;
+    }
+}
+
+/* 手机更小屏（低于 420px）进一步缩小 */
+@media (max-width: 420px) {
+    .card-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 7px;
+    }
+    .prompt-card .card-label {
+        font-size: 9px;
+        padding: 1px 6px;
+    }
+    .modal-image-area {
+        flex: 0 0 32%;
+        min-height: 140px;
+    }
+    .prompt-toolbar .tool-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    .form-modal .form-actions button {
+        padding: 6px 6px;
+        font-size: 12px;
+    }
+    .form-modal .form-group input,
+    .form-modal .form-group select,
+    .form-modal .form-group textarea {
+        font-size: 12px;
+    }
+}
+
+/* 滚动条美化 */
+.modal-info-area::-webkit-scrollbar,
+.image-list::-webkit-scrollbar {
+    width: 5px;
+}
+.modal-info-area::-webkit-scrollbar-track,
+.image-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.modal-info-area::-webkit-scrollbar-thumb,
+.image-list::-webkit-scrollbar-thumb {
+    background: #c0d6e4;
+    border-radius: 20px;
+}

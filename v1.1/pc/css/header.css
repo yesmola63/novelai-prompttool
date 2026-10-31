@@ -1,0 +1,63 @@
+/* ===== 顶栏 ===== */
+.header {
+    background: rgba(255, 255, 255, 0.70);
+    border-radius: 0 0 24px 24px;
+    padding: 16px 28px;
+    box-shadow: 0 4px 20px rgba(74, 144, 217, 0.10);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+/* 触屏设备：去掉 backdrop-filter（滚动时每帧模糊导致掉帧），改用更实背景 */
+@media (pointer: coarse) {
+    .header {
+        background: rgba(255, 255, 255, 0.94);
+    }
+}
+/* 仅支持悬停的精确指针设备（鼠标）保留毛玻璃效果 */
+@media (hover: hover) and (pointer: fine) {
+    .header {
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2c5a7a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.header-title small {
+    font-size: 14px;
+    font-weight: 400;
+    color: #6a8fa8;
+}
+
+.btn-custom {
+    background: #4a90d9;
+    color: #fff;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 40px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(74, 144, 217, 0.25);
+    transition: background 0.2s;
+}
+.btn-custom:hover {
+    background: #3a7abf;
+}

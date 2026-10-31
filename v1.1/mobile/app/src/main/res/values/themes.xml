@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.NovelAIPromptTool" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor">#1a3a50</item>
+        <item name="android:navigationBarColor">#ffffff</item>
+    </style>
+</resources>

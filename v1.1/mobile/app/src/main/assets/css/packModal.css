@@ -1,0 +1,525 @@
+/* ===== 打包/加载提示词 相关样式 ===== */
+
+/* 密码输入框：支持眼睛按钮切换明文/密文 */
+.password-field-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.password-field-wrapper input[type="password"],
+.password-field-wrapper input[type="text"] {
+    flex: 1;
+    padding-right: 44px;
+}
+.password-toggle-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #6a8fa8;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+}
+.password-toggle-btn:hover {
+    color: #2c5a7a;
+    background: rgba(74, 144, 217, 0.08);
+}
+.password-toggle-btn:active {
+    background: rgba(74, 144, 217, 0.16);
+}
+.password-toggle-btn .eye-off,
+.password-toggle-btn .eye-on {
+    width: 20px;
+    height: 20px;
+}
+
+/* 选择圆圈（打包部分提示词） */
+.select-circle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.95);
+    /* 卡片级 backdrop-filter 会为每张卡生成一层模糊合成层，
+       滚动时 WebView 合成器跟不上会出现整块白/黑闪烁，改用更实的半透明底 */
+    background: rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+    z-index: 6;
+    transition: background 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.select-circle::after {
+    content: '✓';
+    color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.15s;
+}
+.select-circle:hover {
+    border-color: #4a90d9;
+    background: rgba(74, 144, 217, 0.45);
+}
+.select-circle.checked {
+    background: #4a90d9;
+    border-color: #4a90d9;
+    box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.30);
+}
+.select-circle.checked::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 打包模态框 */
+.pack-modal-box {
+    max-width: 620px;
+    padding-top: 60px;
+}
+.pack-scroll-body {
+    flex-direction: column;
+    padding: 20px 28px 24px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: calc(92vh - 140px);
+    max-height: calc(92dvh - 140px);
+}
+.radio-row {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin: 4px 0;
+}
+.radio-row label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400;
+    cursor: pointer;
+}
+.radio-row input[type="radio"] {
+    width: auto;
+}
+.path-row {
+    display: flex;
+    gap: 8px;
+}
+.path-row input {
+    flex: 1;
+}
+.path-row .tool-btn {
+    background: rgba(74, 144, 217, 0.10);
+    border: 1px solid rgba(74, 144, 217, 0.20);
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    color: #2c5a7a;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+.path-row .tool-btn:hover {
+    background: #4a90d9;
+    color: #fff;
+}
+.pack-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 14px 28px 20px;
+    border-top: 1px solid rgba(74, 144, 217, 0.10);
+}
+.pack-footer .btn-cancel,
+.load-footer .btn-cancel {
+    background: #fff;
+    color: #c0392b;
+    border: 1px solid rgba(192, 57, 43, 0.40);
+    padding: 8px 28px;
+    border-radius: 40px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.pack-footer .btn-cancel:hover,
+.load-footer .btn-cancel:hover {
+    background: #c0392b;
+    color: #fff;
+}
+.pack-footer .btn-submit,
+.load-footer .btn-submit {
+    background: #4a90d9;
+    color: #fff;
+    border: none;
+    padding: 8px 28px;
+    border-radius: 40px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.pack-footer .btn-submit:hover,
+.load-footer .btn-submit:hover {
+    background: #3a7abf;
+}
+.pack-footer .btn-submit:disabled,
+.load-footer .btn-submit:disabled {
+    background: #b8cbd8;
+    cursor: not-allowed;
+}
+.pack-footer input[type="checkbox"] {
+    width: auto;
+}
+.selected-count {
+    font-size: 13px;
+    color: #2c5a7a;
+    margin-top: 6px;
+    background: rgba(74, 144, 217, 0.08);
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+}
+.quality-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+}
+.custom-slider {
+    flex: 1;
+    min-width: 0;
+    height: 13px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    --percent: 0.6;
+}
+.custom-slider .slider-track {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 4px;
+    background: #b0bec5;
+    border-radius: 2px;
+}
+.custom-slider .slider-fill {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 4px;
+    background: #4a90d9;
+    border-radius: 2px;
+    pointer-events: none;
+    width: calc(var(--percent) * (100% - 13px) + 6.5px);
+}
+.custom-slider .slider-thumb {
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #4a90d9;
+    top: 50%;
+    margin-top: -6.5px;
+    cursor: grab;
+    pointer-events: auto;
+    left: calc(var(--percent) * (100% - 13px));
+}
+.custom-slider .slider-thumb:active {
+    cursor: grabbing;
+}
+.native-range {
+    display: none;
+}
+.quality-hint {
+    font-size: 12px;
+    color: #6a8fa8;
+    margin-top: 6px;
+    line-height: 1.5;
+    background: rgba(74, 144, 217, 0.05);
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+/* 打包进度弹窗 */
+.pack-progress-box {
+    max-width: 420px;
+    width: 90%;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    overflow: visible;
+}
+.pack-progress-box .spinner {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #d0e2ed;
+    border-top-color: #4a90d9;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+}
+.pack-progress-box p {
+    font-size: 15px;
+    color: #2c5a7a;
+    margin: 0;
+    text-align: center;
+    word-break: break-all;
+}
+
+/* ===== 选择提示词界面：全屏铺满，卡片尺寸与主页一致 ===== */
+/* 用 ID 提高优先级，压过 .modal-overlay 的 padding 与 .form-modal .modal-box 的 600px 上限 */
+#selectPromptModal {
+    padding: 0;
+}
+#selectPromptModal .select-modal-box {
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+    padding-top: 0;
+    background: #fff;
+}
+.select-header {
+    position: relative;
+    padding: 14px 20px 10px;
+    background: #fff;
+    border-bottom: 1px solid rgba(74, 144, 217, 0.10);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex-shrink: 0;
+}
+.select-header .modal-back-btn {
+    top: 12px;
+}
+.select-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #1a3a50;
+    margin-left: 82px;
+}
+.select-subtitle {
+    font-size: 12px;
+    color: #6a8fa8;
+    margin-left: 82px;
+}
+/* 只保留一层滚动容器（#selectCardsWrapper）。
+   之前 .select-body 与 #selectCardsWrapper 都开了 overflow-y:auto，
+   双层滚动容器是滚动时闪白/闪黑的重要原因 */
+.select-body {
+    flex: 1;
+    overflow: hidden;
+    /* 左右留白与主页对齐：主页 = body 16px + .prompt-container 18px，卡片宽度因此一致 */
+    padding: 12px 34px 8px;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+}
+@media (max-width: 640px) {
+    .select-body {
+        /* 手机上主页留白为 body 16px + 容器 10px */
+        padding: 10px 26px 6px;
+    }
+}
+.select-body .category-nav {
+    flex-shrink: 0;
+}
+.select-body #selectCardsWrapper {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overflow-anchor: none;
+    /* 不透明底色：即使某帧还没画完，也不会露出白/黑块 */
+    background: #fff;
+}
+.select-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 10px 16px 12px;
+    background: #fff;
+    border-top: 1px solid rgba(74, 144, 217, 0.10);
+    flex-shrink: 0;
+}
+.select-footer .selected-count {
+    margin: 0;
+    margin-right: auto;
+    font-size: 12px;
+    padding: 3px 12px;
+}
+/* 底部按钮缩小一点 */
+.select-footer .btn-cancel,
+.select-footer .btn-submit {
+    padding: 6px 18px;
+    font-size: 13px;
+}
+/* 卡片网格不再覆写：沿用主页的 .card-grid 规则（桌面 190px / 手机由 responsive.css 收窄），
+   使选择界面的卡片大小与主页完全一致 */
+
+/* 加载提示词模态框 */
+.load-modal-box {
+    max-width: 560px;
+    padding-top: 60px;
+}
+.load-scroll-body {
+    flex-direction: column;
+    padding: 20px 28px 24px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: calc(92vh - 140px);
+    max-height: calc(92dvh - 140px);
+}
+.load-file-name {
+    font-size: 13px;
+    color: #2a9d8f;
+    margin-top: 8px;
+}
+.load-error {
+    font-size: 13px;
+    color: #c0392b;
+    margin-top: 8px;
+    word-break: break-word;
+}
+.load-ok {
+    font-size: 14px;
+    color: #2a9d8f;
+    font-weight: 500;
+    margin-top: 8px;
+    background: rgba(42, 157, 143, 0.08);
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+.load-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 14px 28px 20px;
+    border-top: 1px solid rgba(74, 144, 217, 0.10);
+}
+
+/* 打包界面的 tool-btn 禁用态 */
+.tool-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+.tool-btn:disabled:hover {
+    background: rgba(74, 144, 217, 0.10);
+    border-color: rgba(74, 144, 217, 0.20);
+    color: #2c5a7a;
+}
+
+/* ===== 统一美化表单内的 tool-btn（选择提示词/浏览/选择文件等） ===== */
+.form-modal .tool-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: linear-gradient(135deg, rgba(74, 144, 217, 0.14), rgba(42, 157, 143, 0.10));
+    border: 1px solid rgba(74, 144, 217, 0.28);
+    color: #2c5a7a;
+    padding: 9px 20px;
+    border-radius: 18px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(74, 144, 217, 0.08);
+    transition: all 0.2s;
+}
+.form-modal .tool-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #4a90d9, #2a9d8f);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(74, 144, 217, 0.28);
+    transform: translateY(-1px);
+}
+
+/* ===== 选择提示词界面底部按钮（取消/确定） ===== */
+.select-footer .btn-cancel {
+    background: rgba(255, 255, 255, 0.85);
+    color: #6a8fa8;
+    border: 1px solid rgba(74, 144, 217, 0.25);
+    padding: 6px 18px;
+    border-radius: 40px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.select-footer .btn-cancel:hover {
+    background: #f0f4f8;
+    color: #2c5a7a;
+}
+.select-footer .btn-submit {
+    background: linear-gradient(135deg, #4a90d9, #2a9d8f);
+    color: #fff;
+    border: none;
+    padding: 6px 18px;
+    border-radius: 40px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(74, 144, 217, 0.25);
+    transition: background 0.2s;
+}
+.select-footer .btn-submit:hover {
+    box-shadow: 0 4px 14px rgba(74, 144, 217, 0.35);
+}
+
+/* ===== 打包界面：密码框按需展开（带过渡动画） ===== */
+.pack-modal-box .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    color: #2c5a7a;
+    margin-bottom: 0;
+}
+/* 密码框按需显示：用 display 切换 + 淡入动画。
+   不用 max-height/overflow:hidden 折叠——聚焦时浏览器可能"滚动"这个裁切容器，
+   把输入框顶出可视区（表现为点一下就消失） */
+.password-group {
+    display: none;
+}
+.password-group.expanded {
+    display: block;
+    animation: fadeSlideIn 0.22s ease;
+}
+
+/* 展开的选项区 / 建议栏淡入动画 */
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+#webpOptions,
+#zipOptions {
+    animation: fadeSlideIn 0.2s ease;
+}
+.group-suggest {
+    animation: fadeSlideIn 0.18s ease;
+}

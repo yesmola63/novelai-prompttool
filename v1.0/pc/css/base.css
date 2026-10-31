@@ -1,0 +1,22 @@
+/* ===== 全局重置 ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
+    background: #e8f4f8;
+    color: #2c3e50;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 0 16px 30px;
+}
+
+#app {
+    max-width: 1440px;
+    width: 100%;
+    background: transparent;
+}

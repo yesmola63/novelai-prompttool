@@ -1,0 +1,118 @@
+import { API_BASE } from './config.js';
+
+/**
+ * 通用请求封装
+ */
+async function request(endpoint, options = {}) {
+    const response = await fetch(`${API_BASE}${endpoint}`, options);
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error || `HTTP ${response.status}`);
+    }
+    return data;
+}
+
+export function getPrompts() {
+    return request('/prompts');
+}
+
+export function checkPromptsEmpty() {
+    return request('/prompts/check-empty');
+}
+
+export function addPrompt(group, item) {
+    return request('/prompts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ group, item })
+    });
+}
+
+export function updatePrompt(originalGroup, originalRole, originalCommon, newGroup, newItem) {
+    return request('/prompts', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ originalGroup, originalRole, originalCommon, newGroup, newItem })
+    });
+}
+
+export function deletePrompt(group, role, common) {
+    const params = new URLSearchParams({ group, role, common });
+    return request(`/prompts?${params.toString()}`, { method: 'DELETE' });
+}
+
+export function uploadImages(files) {
+    const formData = new FormData();
+    for (const f of files) formData.append('files', f);
+    return request('/upload-images', {
+        method: 'POST',
+        body: formData
+    }).then(data => data.filenames || []);
+}
+
+export function deleteImageFiles(filenames) {
+    if (!filenames || filenames.length === 0) return Promise.resolve();
+    return request('/images', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filenames })
+    }).then(data => data.deleted || []);
+}
+export function updateAllPrompts(data) {
+    return request('/prompts/replace', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+}
+
+// ---------- 打包提示词 ----------
+export function packPrompts(payload) {
+    return request('/pack', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+}
+
+export function getPackProgress(taskId) {
+    return request(`/pack/progress?task_id=${encodeURIComponent(taskId)}`);
+}
+
+export function choosePackDir() {
+    return request('/pack/choose-dir', { method: 'POST' });
+}
+
+// ---------- 加载提示词 ----------
+export function selectLoadFile() {
+    return request('/load/select-file', { method: 'POST' });
+}
+
+export function unlockLoadFile(password) {
+    return request('/load/unlock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+    });
+}
+
+export function applyLoad(mode) {
+    return request('/load/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode })
+    });
+}
+
+// ---------- prompt.json 恢复 ----------
+export function checkPromptRecovery() {
+    return request('/prompt/recovery-check');
+}
+
+export function recoverPrompt(data) {
+    return request('/prompt/recover', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data })
+    });
+}

@@ -1,0 +1,70 @@
+/* ===== 全局重置 ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 禁用浏览器滚动锚定：防止滚动过程中内容异步加载时滚动位置被自动拉回（"往下翻时往上飘"） */
+html, body {
+    overflow-anchor: none;
+}
+
+/* 滚动期间（JS 在 touchstart/scroll 时添加 .scrolling）禁用所有 hover 效果，
+   避免 Android WebView 触屏滚动划过元素时触发 :hover 动画导致跳动 */
+body.scrolling * {
+    transition: none !important;
+    animation: none !important;
+}
+body.scrolling .prompt-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* 禁用图片拖拽/长按菜单：Android WebView 拖拽图片或长按弹菜单会导致页面跳动 */
+img {
+    -webkit-user-drag: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+.prompt-card img {
+    pointer-events: none;
+}
+/* 卡片本体仍需可点击 */
+.prompt-card {
+    pointer-events: auto;
+}
+
+body {
+    font-family: 'Segoe UI', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
+    background: #e8f4f8;
+    color: #2c3e50;
+    height: 100%;
+    overflow: hidden;          /* body 不再滚动：滚动迁移到 #app 内部容器 */
+    display: flex;
+    justify-content: center;
+    padding: 0 16px 30px;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+}
+
+html {
+    height: 100%;
+    overflow: hidden;
+}
+
+#app {
+    max-width: 1440px;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    overflow-y: auto;                  /* 唯一的滚动容器 */
+    -webkit-overflow-scrolling: touch;  /* 触屏惯性滚动 */
+    overflow-anchor: none;              /* 彻底禁用滚动锚定（滚动位置补偿） */
+    overscroll-behavior-y: contain;     /* 阻止滚动链/回弹 */
+}
+
+/* modal 打开时锁定 #app 滚动（body 已不滚动，改用 body class 控制容器） */
+body.modal-open #app {
+    overflow: hidden;
+}

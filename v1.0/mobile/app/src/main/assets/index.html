@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NovelAI 提示词记录</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/detailModal.css">
+    <link rel="stylesheet" href="css/formModal.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/dialog.css">
+    <link rel="stylesheet" href="css/packModal.css">
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="header-title">📋 NovelAI 提示词记录</div>
+        </header>
+        <div class="prompt-container" id="promptContainer">
+            <div class="prompt-loading-overlay" id="promptLoading">
+                <div class="spinner"></div>
+                <p>⏳ 加载提示词数据…</p>
+            </div>
+
+            <!-- 分类导航 -->
+            <div class="category-nav" id="categoryNav"></div>
+
+            <div class="prompt-toolbar" id="promptToolbar" style="display:none;">
+                <button class="tool-btn" id="addPromptBtn">➕ 添加提示词</button>
+                <button class="tool-btn" id="packPromptBtn">📦 打包提示词</button>
+                <button class="tool-btn" id="loadPromptBtn">📥 加载提示词</button>
+            </div>
+
+            <div id="promptCardsWrapper"></div>
+        </div>
+    </div>
+
+    <!-- 详情页（全屏非模态框） -->
+    <div class="detail-view" id="detailModal">
+        <div class="detail-header">
+            <button class="modal-back-btn detail-back-btn" id="modalBackBtn">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                返回
+            </button>
+        </div>
+        <div class="detail-content">
+            <div class="detail-image-area">
+                <div class="img-wrapper" id="modalImgWrapper">
+                    <img id="modalImg" src="" alt="提示词图片" style="display:none;">
+                    <div class="loading-indicator" id="modalLoading">
+                        <div class="spinner-sm"></div>
+                        <span>加载中...</span>
+                    </div>
+                    <button class="download-btn" id="modalDownloadBtn">
+                        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        保存
+                    </button>
+                </div>
+                <div class="img-nav">
+                    <div class="nav-group">
+                        <button id="modalPrevBtn">‹</button>
+                        <span class="counter" id="modalCounter">1 / 1</span>
+                        <button id="modalNextBtn">›</button>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-info-area">
+                <div class="info-title">📄 详细信息</div>
+                <div class="info-item">
+                    <span class="label">📝 指令 (common)</span>
+                    <div class="value">
+                        <span class="cmd-text" id="modalCommon"></span>
+                        <button class="copy-btn" id="modalCopyBtn">复制</button>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="label">📌 模型版本 (version)</span>
+                    <div class="value" id="modalVersion">—</div>
+                </div>
+                <div class="info-item">
+                    <span class="label">🎭 角色 (role)</span>
+                    <div class="value" id="modalRole">—</div>
+                </div>
+                <div class="info-item desc-item" id="modalDescItem">
+                    <span class="label">📝 描述 (desc)</span>
+                    <div class="value" id="modalDesc">—</div>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-action-btn edit" id="modalEditBtn">✏️ 编辑</button>
+                    <button class="modal-action-btn delete" id="modalDeleteBtn">🗑️ 删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加提示词模态框 -->
+    <div class="modal-overlay form-modal" id="addPromptModal">
+        <div class="modal-box">
+            <button class="modal-back-btn" id="addModalBackBtn">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                取消
+            </button>
+            <div class="modal-body">
+                <div style="margin-bottom:6px;">
+                    <h2 style="font-size:20px; font-weight:600; color:#1a3a50;">➕ 添加自定义提示词</h2>
+                    <p style="font-size:13px; color:#6a8fa8;">所有添加的提示词会保存在 prompt.json 中</p>
+                </div>
+                <div class="form-group">
+                    <label>分组 (type) <span style="color:#c0392b;">*</span></label>
+                    <select id="addTypeSelect">
+                        <option value="__new__">+ 新建分组</option>
+                    </select>
+                    <input type="text" id="addTypeCustom" placeholder="输入新分组名称" style="display:none; margin-top:6px;">
+                </div>
+                <div class="form-group">
+                    <label>角色 (role)</label>
+                    <input type="text" id="addRole" placeholder="角色名称（可选）">
+                </div>
+                <div class="form-group">
+                    <label>指令 (common) <span style="color:#c0392b;">*</span></label>
+                    <textarea id="addCommon" placeholder="提示词内容"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>版本 (version)</label>
+                    <input type="text" id="addVersion" placeholder="例如：4, 4-5c">
+                </div>
+                <div class="form-group">
+                    <label>描述 (desc)</label>
+                    <input type="text" id="addDesc" placeholder="可选描述">
+                </div>
+                <div class="form-group">
+                    <label>封面图片</label>
+                    <div class="image-list" id="addImageList"></div>
+                    <div class="image-add-row">
+                        <!-- 文件输入框，用于选择图片，不自动上传 -->
+                        <label class="file-pick-btn" for="addImageFileInput">🖼️ 选择图片</label>
+                        <input type="file" id="addImageFileInput" accept="image/*" multiple class="file-input-hidden">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-cancel" id="addModalCancelBtn">取消</button>
+                    <button class="btn-submit" id="addModalSubmitBtn">✅ 添加提示词</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑提示词模态框 -->
+    <div class="modal-overlay form-modal" id="editPromptModal">
+        <div class="modal-box">
+            <button class="modal-back-btn" id="editModalBackBtn">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                取消
+            </button>
+            <div class="modal-body">
+                <div style="margin-bottom:6px;">
+                    <h2 style="font-size:20px; font-weight:600; color:#1a3a50;">✏️ 编辑提示词</h2>
+                    <p style="font-size:13px; color:#6a8fa8;">修改提示词的信息</p>
+                </div>
+                <div class="form-group">
+                    <label>分组 (type) <span style="color:#c0392b;">*</span></label>
+                    <select id="editTypeSelect">
+                        <option value="__new__">+ 新建分组</option>
+                    </select>
+                    <input type="text" id="editTypeCustom" placeholder="输入新分组名称" style="display:none; margin-top:6px;">
+                </div>
+                <div class="form-group">
+                    <label>角色 (role)</label>
+                    <input type="text" id="editRole" placeholder="角色名称（可选）">
+                </div>
+                <div class="form-group">
+                    <label>指令 (common) <span style="color:#c0392b;">*</span></label>
+                    <textarea id="editCommon" placeholder="提示词内容"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>版本 (version)</label>
+                    <input type="text" id="editVersion" placeholder="例如：4, 4-5c">
+                </div>
+                <div class="form-group">
+                    <label>描述 (desc)</label>
+                    <input type="text" id="editDesc" placeholder="可选描述">
+                </div>
+                <div class="form-group">
+                    <label>封面图片</label>
+                    <div class="image-list" id="editImageList"></div>
+                    <div class="image-add-row">
+                        <!-- 文件输入框，用于选择图片，不自动上传 -->
+                        <label class="file-pick-btn" for="editImageFileInput">🖼️ 选择图片</label>
+                        <input type="file" id="editImageFileInput" accept="image/*" multiple class="file-input-hidden">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-cancel" id="editModalCancelBtn">取消</button>
+                    <button class="btn-submit" id="editModalSubmitBtn">💾 保存修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 打包提示词模态框 -->
+    <div class="modal-overlay form-modal" id="packModal">
+        <div class="modal-box pack-modal-box">
+            <button class="modal-back-btn" id="packModalBackBtn">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                取消
+            </button>
+            <div class="modal-body pack-scroll-body">
+                <div style="margin-bottom:6px;">
+                    <h2 style="font-size:20px; font-weight:600; color:#1a3a50;">📦 打包提示词</h2>
+                    <p style="font-size:13px; color:#6a8fa8;">将提示词压缩为一个 .bundle 文件</p>
+                </div>
+                <div class="form-group">
+                    <label>打包后的文件名 <span style="color:#c0392b;">*</span></label>
+                    <input type="text" id="packFilename" placeholder="例如：我的提示词包">
+                </div>
+                <div class="form-group">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" id="packNeedPassword" style="width:auto;"> 是否需要密码
+                    </label>
+                    <div class="password-field-wrapper">
+                        <input type="password" id="packPassword" placeholder="输入密码" disabled>
+                        <button type="button" class="password-toggle-btn" data-target="packPassword" aria-label="显示/隐藏密码">
+                            <svg viewBox="0 0 24 24" class="eye-off" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17.94 17.92A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                            <svg viewBox="0 0 24 24" class="eye-on" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>需要打包的提示词</label>
+                    <div class="radio-row">
+                        <label><input type="radio" name="packScope" value="all" checked> 打包所有提示词</label>
+                        <label><input type="radio" name="packScope" value="partial"> 打包部分提示词</label>
+                    </div>
+                    <button class="tool-btn" id="packSelectBtn" type="button" disabled>🎯 选择提示词</button>
+                    <div class="selected-count" id="packSelectedCount" style="display:none;"></div>
+                </div>
+                <div class="form-group">
+                    <label>是否压缩图片</label>
+                    <div class="radio-row">
+                        <label><input type="radio" name="packImageMode" value="none" checked> 不压缩</label>
+                        <label><input type="radio" name="packImageMode" value="webp"> 压缩为 webp</label>
+                        <label><input type="radio" name="packImageMode" value="zip"> 压缩包压缩</label>
+                    </div>
+                    <div id="webpOptions" style="display:none; margin-top:10px;">
+                        <div class="radio-row">
+                            <label><input type="radio" name="webpMode" value="lossless"> 无损模式（体积减少 20%~30%）</label>
+                            <label><input type="radio" name="webpMode" value="quality" checked> 指定压缩率</label>
+                        </div>
+                        <div class="quality-row">
+                            <div class="custom-slider" id="customSlider">
+                                <input type="range" id="webpQuality" class="native-range" min="50" max="100" value="80" hidden>
+                                <div class="slider-track"></div>
+                                <div class="slider-fill"></div>
+                                <div class="slider-thumb"></div>
+                            </div>
+                            <span id="webpQualityValue">80</span>%
+                        </div>
+                        <div class="quality-hint" id="webpQualityHint"></div>
+                    </div>
+                    <div id="zipOptions" style="display:none; margin-top:10px;">
+                        <select id="packZipMode">
+                            <option value="standard">标准压缩</option>
+                            <option value="max">最大压缩</option>
+                            <option value="extreme">极限压缩</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>保存路径</label>
+                    <div class="path-row">
+                        <input type="text" id="packSavePath" placeholder="留空使用默认路径">
+                        <button class="tool-btn" id="packBrowseBtn" type="button">📂 浏览</button>
+                    </div>
+                </div>
+            </div>
+            <div class="pack-footer">
+                <button class="btn-cancel pack-cancel-btn" id="packCancelBtn">取消</button>
+                <button class="btn-submit" id="packConfirmBtn">✅ 确认打包</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 打包进度模态框 -->
+    <div class="modal-overlay" id="packProgressModal">
+        <div class="modal-box pack-progress-box">
+            <div class="spinner"></div>
+            <p id="packProgressText">正在初始化...</p>
+        </div>
+    </div>
+
+    <!-- 选择提示词模态框（打包部分提示词用） -->
+    <div class="modal-overlay form-modal" id="selectPromptModal">
+        <div class="modal-box select-modal-box">
+            <div class="select-header">
+                <button class="modal-back-btn" id="selectModalBackBtn">
+                    <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    返回
+                </button>
+                <span class="select-title">🎯 选择要打包的提示词</span>
+                <span class="select-subtitle">点击封面勾选提示词，点击下方按钮查看详细信息</span>
+            </div>
+            <div class="select-body">
+                <div class="category-nav" id="selectCategoryNav"></div>
+                <div id="selectCardsWrapper"></div>
+            </div>
+            <div class="select-footer">
+                <span class="selected-count" id="selectCount">已选 0 个</span>
+                <button class="btn-cancel" id="selectCancelBtn">取消</button>
+                <button class="btn-submit" id="selectConfirmBtn">✅ 确定选择（0）</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载提示词模态框 -->
+    <div class="modal-overlay form-modal" id="loadPromptModal">
+        <div class="modal-box load-modal-box">
+            <button class="modal-back-btn" id="loadModalBackBtn">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                取消
+            </button>
+            <div class="modal-body load-scroll-body">
+                <div style="margin-bottom:6px;">
+                    <h2 style="font-size:20px; font-weight:600; color:#1a3a50;">📥 加载提示词</h2>
+                    <p style="font-size:13px; color:#6a8fa8;">选择一个 .bundle 提示词文件进行加载</p>
+                </div>
+                <div class="form-group">
+                    <label>选择提示词文件</label>
+                    <button class="tool-btn" id="loadSelectFileBtn" type="button">📂 选择提示词文件</button>
+                    <div class="load-file-name" id="loadFileName"></div>
+                </div>
+                <div class="form-group" id="loadPasswordGroup" style="display:none;">
+                    <label>该文件已加密，请输入密码</label>
+                    <div class="password-field-wrapper">
+                        <input type="password" id="loadPassword" placeholder="输入密码后自动解锁">
+                        <button type="button" class="password-toggle-btn" data-target="loadPassword" aria-label="显示/隐藏密码">
+                            <svg viewBox="0 0 24 24" class="eye-off" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17.94 17.92A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                            <svg viewBox="0 0 24 24" class="eye-on" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="load-error" id="loadError"></div>
+                <div class="load-ok" id="loadOk" style="display:none;">✅ 文件校验通过，可以加载</div>
+            </div>
+            <div class="load-footer">
+                <button class="btn-cancel" id="loadCancelBtn">取消</button>
+                <button class="btn-submit" id="loadApplyBtn" disabled>📥 加载提示词</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义弹窗 -->
+    <div class="modal-overlay" id="customDialog">
+        <div class="modal-box dialog-box">
+            <div class="dialog-header">
+                <span id="dialogTitle">提示</span>
+            </div>
+            <div class="dialog-body">
+                <p id="dialogMessage"></p>
+            </div>
+            <div class="dialog-footer">
+                <button class="dialog-btn dialog-cancel" id="dialogCancelBtn" style="display:none;">取消</button>
+                <button class="dialog-btn dialog-confirm" id="dialogConfirmBtn">确定</button>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="script/main.js"></script>
+</body>
+</html>
