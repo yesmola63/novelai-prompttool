@@ -28,7 +28,7 @@ NovelAI 提示词记录工具的**版本存档仓库**，包含电脑版（Windo
 
 如果只是想提交 bug 或提出建议，推荐用下面任意一种方式，不一定非要加好友：
 
-- 在本仓库提 [Issue](../../issues)
+- 在本仓库提 [Issue](https://github.com/yesmola63/novelai-prompttool/issues)
 - 发邮件到：**3632123929@qq.com** 或 **miaojiang12@outlook.com**
 
 ### 想聊天
